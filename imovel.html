@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Imóvel - Casa Certa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🏠</span>
+                <span>Casa<span class="logo-highlight">Certa</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="imoveis.html">Imóveis</a>
+                <a href="login.html">Entrar</a>
+                <a href="registar.html" class="btn-primary">Registar</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="properties-page">
+        <div class="container">
+            <a href="imoveis.html" style="color: var(--gray-400); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+                ← Voltar
+            </a>
+
+            <div id="propertyDetails">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>A carregar detalhes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        async function loadPropertyDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (!id) {
+                document.getElementById('propertyDetails').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Imóvel não encontrado</h3>
+                        <a href="imoveis.html" class="btn-primary">Voltar aos imóveis</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=*,users(name,email,phone)&id=eq.${id}&status=eq.ativo`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                const properties = await response.json();
+
+                if (properties.length === 0) {
+                    document.getElementById('propertyDetails').innerHTML = `
+                        <div class="empty-state">
+                            <h3>Imóvel não encontrado</h3>
+                            <a href="imoveis.html" class="btn-primary">Voltar aos imóveis</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const p = properties[0];
+                const owner = p.users || {};
+
+                document.getElementById('propertyDetails').innerHTML = `
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+                        <div>
+                            <div style="background: var(--dark-700); border-radius: 16px; aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 24px;">
+                                🏠
+                            </div>
+                            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                                <span class="property-badge ${p.type === 'arrendamento' ? 'rent' : 'sale'}">
+                                    ${p.type === 'arrendamento' ? 'Arrendamento' : 'Venda'}
+                                </span>
+                            </div>
+                            <h1 style="font-size: 2rem; margin-bottom: 8px;">${p.title}</h1>
+                            <p style="font-size: 2rem; font-weight: 800; color: var(--teal-400); margin-bottom: 16px;">${formatPrice(p.price)}</p>
+                            <p style="color: var(--gray-400); margin-bottom: 24px;">📍 ${p.municipality}, ${p.province}</p>
+
+                            <div style="background: var(--dark-800); border: 1px solid var(--dark-700); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <h3 style="margin-bottom: 16px;">Detalhes</h3>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                    ${p.bedrooms ? `<div>🛏️ ${p.bedrooms} Quartos</div>` : ''}
+                                    ${p.bathrooms ? `<div>🚿 ${p.bathrooms} WC</div>` : ''}
+                                    ${p.area ? `<div>📐 ${p.area} m²</div>` : ''}
+                                </div>
+                            </div>
+
+                            <div style="background: var(--dark-800); border: 1px solid var(--dark-700); border-radius: 12px; padding: 24px;">
+                                <h3 style="margin-bottom: 16px;">Descrição</h3>
+                                <p style="color: var(--gray-300); line-height: 1.6;">${p.description}</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="background: var(--dark-800); border: 1px solid var(--dark-700); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <h3 style="margin-bottom: 16px;">Proprietário</h3>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                    <div style="width: 48px; height: 48px; background: var(--teal-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                        ${(owner.name || 'U').charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600;">${owner.name || 'Proprietário'}</p>
+                                        <p style="font-size: 0.875rem; color: var(--gray-400);">Membro desde 2026</p>
+                                    </div>
+                                </div>
+                                <a href="login.html" class="btn-primary" style="width: 100%; text-align: center; display: block;">💬 Enviar mensagem</a>
+                            </div>
+
+                            <div style="background: rgba(13, 148, 136, 0.1); border: 1px solid rgba(13, 148, 136, 0.3); border-radius: 12px; padding: 24px;">
+                                <h3 style="color: var(--teal-400); margin-bottom: 12px;">Dicas de Segurança</h3>
+                                <ul style="list-style: none; font-size: 0.875rem; color: var(--gray-300);">
+                                    <li>• Visite o imóvel antes de pagar</li>
+                                    <li>• Verifique a identidade do proprietário</li>
+                                    <li>• Use o chat da plataforma</li>
+                                    <li>• Não envie dinheiro antes do contrato</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('propertyDetails').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Erro ao carregar imóvel</h3>
+                        <a href="imoveis.html" class="btn-primary">Voltar aos imóveis</a>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPropertyDetails);
+    </script>
+</body>
+</html>

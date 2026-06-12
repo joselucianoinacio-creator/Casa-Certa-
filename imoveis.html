@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imóveis - Casa Certa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🏠</span>
+                <span>Casa<span class="logo-highlight">Certa</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="imoveis.html">Imóveis</a>
+                <a href="login.html">Entrar</a>
+                <a href="registar.html" class="btn-primary">Registar</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="properties-page">
+        <div class="container">
+            <h1 style="margin-bottom: 8px;">Imóveis em Angola</h1>
+            <p style="color: var(--gray-400); margin-bottom: 24px;">Encontre o imóvel ideal para arrendar ou comprar</p>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar por localização, tipo, preço...">
+            </div>
+
+            <div class="filters">
+                <select>
+                    <option>Todos os tipos</option>
+                    <option>Arrendamento</option>
+                    <option>Venda</option>
+                </select>
+                <select>
+                    <option>Todas as províncias</option>
+                    <option>Luanda</option>
+                    <option>Benguela</option>
+                    <option>Huambo</option>
+                </select>
+                <select>
+                    <option>Qualquer preço</option>
+                    <option>Até 50.000 Kz</option>
+                    <option>50.000 - 150.000 Kz</option>
+                    <option>150.000+ Kz</option>
+                </select>
+            </div>
+
+            <div id="propertiesGrid" class="properties-grid">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>A carregar imóveis...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadProperties);
+    </script>
+</body>
+</html>

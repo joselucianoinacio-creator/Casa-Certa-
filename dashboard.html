@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Casa Certa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🏠</span>
+                <span>Casa<span class="logo-highlight">Certa</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="imoveis.html">Imóveis</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="#" onclick="logout()">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Olá, <span id="userName">Utilizador</span>!</h1>
+                <p>Gerencie os seus imóveis e conecte-se com inquilinos.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">🏠</div>
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Meus Imóveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">💬</div>
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Mensagens</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">❤️</div>
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Favoritos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">📅</div>
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Visitas</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2>Ações Rápidas</h2>
+                <div class="actions-grid">
+                    <a href="adicionar-imovel.html" class="action-card">
+                        <div class="action-card-icon">➕</div>
+                        <div class="action-card-title">Adicionar Imóvel</div>
+                    </a>
+                    <a href="imoveis.html" class="action-card">
+                        <div class="action-card-icon">🏠</div>
+                        <div class="action-card-title">Ver Imóveis</div>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="action-card-icon">💬</div>
+                        <div class="action-card-title">Mensagens</div>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="action-card-icon">📄</div>
+                        <div class="action-card-title">Contratos</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Check auth and load user
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Imóvel - Casa Certa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🏠</span>
+                <span>Casa<span class="logo-highlight">Certa</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="#" onclick="logout()">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="form-card" style="max-width: 700px;">
+            <h1>Adicionar Imóvel</h1>
+            <p>Preencha os detalhes do seu imóvel para anunciar</p>
+
+            <div id="error" class="form-error" style="display: none;"></div>
+            <div id="success" class="form-success" style="display: none;"></div>
+
+            <form id="propertyForm">
+                <div class="form-group">
+                    <label for="title">Título *</label>
+                    <input type="text" id="title" placeholder="Ex: T3 moderno em Talatona" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descrição *</label>
+                    <textarea id="description" rows="4" placeholder="Descreva o imóvel..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type">Tipo *</label>
+                        <select id="type" required>
+                            <option value="arrendamento">Arrendamento</option>
+                            <option value="venda">Venda</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyType">Tipo de Imóvel *</label>
+                        <select id="propertyType" required>
+                            <option value="apartamento">Apartamento</option>
+                            <option value="casa">Casa</option>
+                            <option value="terreno">Terreno</option>
+                            <option value="comercial">Comercial</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Preço (Kz) *</label>
+                    <input type="number" id="price" placeholder="150000" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="province">Província *</label>
+                        <select id="province" required>
+                            <option>Luanda</option>
+                            <option>Benguela</option>
+                            <option>Huambo</option>
+                            <option>Lobito</option>
+                            <option>Lubango</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="municipality">Município *</label>
+                        <input type="text" id="municipality" placeholder="Talatona" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="neighborhood">Bairro</label>
+                    <input type="text" id="neighborhood" placeholder="Camama">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bedrooms">Quartos</label>
+                        <input type="number" id="bedrooms" placeholder="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="bathrooms">WC</label>
+                        <input type="number" id="bathrooms" placeholder="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Área (m²)</label>
+                        <input type="number" id="area" placeholder="120">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large" style="width: 100%;">Publicar Imóvel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('propertyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById('error');
+            const successDiv = document.getElementById('success');
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const property = {
+                owner_id: user.id,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                type: document.getElementById('type').value,
+                property_type: document.getElementById('propertyType').value,
+                price: parseFloat(document.getElementById('price').value),
+                province: document.getElementById('province').value,
+                municipality: document.getElementById('municipality').value,
+                neighborhood: document.getElementById('neighborhood').value || null,
+                bedrooms: parseInt(document.getElementById('bedrooms').value) || null,
+                bathrooms: parseInt(document.getElementById('bathrooms').value) || null,
+                area: parseFloat(document.getElementById('area').value) || null,
+                status: 'ativo'
+            };
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/properties`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(property)
+                });
+
+                if (response.ok) {
+                    successDiv.textContent = 'Imóvel publicado com sucesso!';
+                    successDiv.style.display = 'block';
+                    errorDiv.style.display = 'none';
+                    setTimeout(() => window.location.href = 'dashboard.html', 2000);
+                } else {
+                    throw new Error('Failed to create property');
+                }
+            } catch (error) {
+                showError(errorDiv, 'Erro ao publicar imóvel. Tente novamente.');
+                successDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Casa Certa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🏠</span>
+                <span>Casa<span class="logo-highlight">Certa</span></span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="form-card">
+            <h1>Criar conta</h1>
+            <p>Junte-se à revolução imobiliária angolana</p>
+
+            <div id="error" class="form-error" style="display: none;"></div>
+
+            <form id="registerForm">
+                <input type="hidden" id="userType" value="inquilino">
+
+                <div class="user-type-selector">
+                    <div class="user-type-option" data-type="inquilino">
+                        <div class="icon">🏠</div>
+                        <div class="label">Quero arrendar</div>
+                    </div>
+                    <div class="user-type-option" data-type="proprietario">
+                        <div class="icon">🏢</div>
+                        <div class="label">Quero anunciar</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <input type="text" id="name" placeholder="José Inácio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="tel" id="phone" placeholder="942 726 245">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Palavra-passe</label>
+                    <input type="password" id="password" placeholder="Mínimo 6 caracteres" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar palavra-passe</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large" style="width: 100%;">Criar conta →</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Já tem conta? <a href="login.html">Entre aqui</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
